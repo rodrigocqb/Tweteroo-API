@@ -24,4 +24,8 @@ app.post("/tweets", (req, res) => {
   res.send("OK");
 });
 
+app.get("/tweets", (req, res) => {
+  res.send(tweets);
+});
+
 app.listen(5000, () => console.log("Listening on port 5000"));
