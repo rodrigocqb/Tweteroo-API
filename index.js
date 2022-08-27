@@ -13,8 +13,7 @@ app.post("/sign-up", (req, res) => {
   const { username, avatar } = req.body;
   if (
     !username ||
-    !avatar.startsWith("https://") ||
-    !avatar.startsWith("http://")
+    !(avatar.startsWith("https://") || avatar.startsWith("http://"))
   ) {
     return res.status(400).send("Todos os campos são obrigatórios!");
   }
