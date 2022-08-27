@@ -10,14 +10,26 @@ app.use(cors());
 app.use(express.json());
 
 app.post("/sign-up", (req, res) => {
-  const user = req.body;
-  users.push(user);
+  const { username, avatar } = req.body;
+  if (
+    !username ||
+    !avatar.startsWith("https://") ||
+    !avatar.startsWith("http://")
+  ) {
+    return res.status(400).send("Todos os campos são obrigatórios!");
+  }
+
+  users.push({ username, avatar });
   res.status(201).send("OK");
 });
 
 app.post("/tweets", (req, res) => {
-  const tweet = req.body;
-  tweets.push(tweet);
+  const { username, tweet } = req.body;
+  if (!username || !tweet) {
+    return res.status(400).send("Todos os campos são obrigatórios!");
+  }
+
+  tweets.push({ username, tweet });
   res.status(201).send("OK");
 });
 
