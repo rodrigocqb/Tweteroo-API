@@ -38,20 +38,15 @@ app.post("/tweets", (req, res) => {
 });
 
 app.get("/tweets", (req, res) => {
-  const newTweets = tweets.slice(-10).map((tweet) => {
-    const avatar = users.find(
-      (user) => user.username === tweet.username
-    ).avatar;
-    return { ...tweet, avatar };
-  });
-  res.send(newTweets);
-});
-
-app.get("/tweets/:username", (req, res) => {
-  const { username } = req.params;
-  const newTweets = tweets
-    .slice(-10)
-    .filter((value) => value.username === username)
+  let page = parseInt(req.query.page);
+  if (page < 1) {
+    return res.status(400).send("Informe uma página válida!");
+  }
+  if (!page) {
+    page = 1;
+  }
+  const newTweets = tweets.reverse
+    .slice(-10 * page, -((page - 1) * 10) + 1)
     .map((tweet) => {
       const avatar = users.find(
         (user) => user.username === tweet.username
@@ -59,6 +54,19 @@ app.get("/tweets/:username", (req, res) => {
       return { ...tweet, avatar };
     });
   res.send(newTweets);
+});
+
+app.get("/tweets/:username", (req, res) => {
+  const { username } = req.params;
+  const userTweets = tweets.reverse
+    .filter((value) => value.username === username)
+    .map((tweet) => {
+      const avatar = users.find(
+        (user) => user.username === tweet.username
+      ).avatar;
+      return { ...tweet, avatar };
+    });
+  res.send(userTweets);
 });
 
 app.listen(5000, () => console.log("Listening on port 5000"));
