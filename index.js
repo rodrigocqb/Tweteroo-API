@@ -9,6 +9,10 @@ const tweets = [];
 app.use(cors());
 app.use(express.json());
 
+function userExists(username) {
+  return users.some((value) => value.username === username);
+}
+
 app.post("/sign-up", (req, res) => {
   const { username, avatar } = req.body;
   if (
@@ -24,7 +28,7 @@ app.post("/sign-up", (req, res) => {
 
 app.post("/tweets", (req, res) => {
   const { username, tweet } = req.body;
-  if (!username || !tweet) {
+  if (!username || !tweet || !userExists(username)) {
     return res.status(400).send("Todos os campos são obrigatórios!");
   }
 
