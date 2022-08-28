@@ -45,27 +45,43 @@ app.get("/tweets", (req, res) => {
   if (!page) {
     page = 1;
   }
-  const newTweets = tweets.reverse
-    .slice(-10 * page, -((page - 1) * 10) + 1)
-    .map((tweet) => {
-      const avatar = users.find(
-        (user) => user.username === tweet.username
-      ).avatar;
-      return { ...tweet, avatar };
-    });
+  let newTweets;
+  if (page === 1) {
+    newTweets = tweets
+      .slice(-10 * page)
+      .map((tweet) => {
+        const avatar = users.find(
+          (user) => user.username === tweet.username
+        ).avatar;
+        return { ...tweet, avatar };
+      })
+      .reverse();
+  } else {
+    newTweets = tweets
+      .slice(-10 * page, -((page - 1) * 10))
+      .map((tweet) => {
+        const avatar = users.find(
+          (user) => user.username === tweet.username
+        ).avatar;
+        return { ...tweet, avatar };
+      })
+      .reverse();
+  }
+
   res.send(newTweets);
 });
 
 app.get("/tweets/:username", (req, res) => {
   const { username } = req.params;
-  const userTweets = tweets.reverse
+  const userTweets = tweets
     .filter((value) => value.username === username)
     .map((tweet) => {
       const avatar = users.find(
         (user) => user.username === tweet.username
       ).avatar;
       return { ...tweet, avatar };
-    });
+    })
+    .reverse();
   res.send(userTweets);
 });
 
